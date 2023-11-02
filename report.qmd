@@ -1,0 +1,70 @@
+---
+title: "Analysis of Life Expectancy and GDP in Gapminder"
+author:
+  - Joel Nitta
+  - Taro Chiba
+date: 2023-11-02
+format: docx
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+
+# Load packages
+library(tidyverse)
+library(scales)
+```
+
+```{r}
+#| label: load-data
+#| echo: false
+#| message: false
+
+# Load the data
+gapminder <- read_csv("https://raw.githubusercontent.com/data-analysis-chiba-2023/day04-tidy/main/data_raw/gapminder.csv")
+```
+
+## Introduction
+
+The "gapminder" dataset includes economic statistics collected for various countries from `r min(gapminder$year)` to `r max(gapminder$year)`.
+
+## About the data
+
+The dataset includes the following columns:
+
+- country: name of the country
+- continent: name of the continent
+- year: year of data collection
+- lifeExp: life expectancy (in years)
+- pop: Population
+- gdpPercap: Per capita GDP, in USD
+
+## Data visualization
+
+```{r}
+#| echo: false
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = continent, size = pop)) +
+  geom_point(alpha = 0.6) +
+  facet_wrap(vars(year)) +
+  scale_x_log10(labels = label_comma()) +
+  labs(
+    y = "Life Expectancy (years)",
+    x = "GDP per capita (USD)",
+    color = "Continent",
+    size = "Population"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+## Discussion
+
+Figure 1 shows the relationship between life expectancy and GDP per capita across time.
+
+There is a general positive relationship between the two, which shows that richer countries tend to have higher life expectancy.
+
+We can see that at both the start and end of the survey period, European countries are in the upper right (high GDP and life expectancy), whereas African countries are in the lower left (low GDP and life expectancy). However, there is a clear shift in the position of Asian countries: although they start in the lower left in the 1950s, by 2000 they have moved to the upper right.
+
+This is likely driven not only by the economic success of countries like China and India (large dots in the plot), but neighboring countries as well.
